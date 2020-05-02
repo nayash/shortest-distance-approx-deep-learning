@@ -5,7 +5,7 @@ src/__pycache__/
 src/secrets.py
 src/scratch_pad.py
 src/scratch_pad.ipynb
-
+data/emb
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

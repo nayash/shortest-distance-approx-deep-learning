@@ -3,11 +3,15 @@ Implementation of the paper "Shortest Path Distance Approximation using Deep lea
 
 I have just started this project. I will update the README progressively.
 
-Graph data is downloaded from:
+Graph data is downloaded with gratitude from:
+
+<pre>
 @inproceedings{nr,
-      title = {The Network Data Repository with Interactive Graph Analytics and Visualization},
+      title = {The Network Data Repository with Interactive Graph Analytics and 
+      Visualization},
       author={Ryan A. Rossi and Nesreen K. Ahmed},
       booktitle = {AAAI},
       url={http://networkrepository.com},
       year={2015}
   }
+</pre>
