@@ -21,7 +21,8 @@ import os
 import pandas as pd
 from matplotlib import pyplot as plt
 import winsound
-import time
+import time̥
+
 
 def seconds_to_minutes(seconds):
     return str(seconds // 60) + " minutes " + str(np.round(seconds % 60)) + " seconds"
