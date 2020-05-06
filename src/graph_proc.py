@@ -13,11 +13,12 @@ from queue import PriorityQueue
 from scipy import io
 import numpy as np
 import os
-from tqdm.autonotebook import tqdm
+from tqdm.auto import tqdm
 from logger import Logger
 import pickle
 import time
 import datetime
+import heapq
 
 
 class Node:
@@ -47,8 +48,9 @@ class Graph:
         # self.pq_nodes = PriorityQueue()
         self.distances = np.array([np.inf] * self.graph_sparse.shape[0])
         self.distances[source] = 0
+        self.pq_nodes = [(dist, id) for id, dist in enumerate(self.distances)]
+        heapq.heapify(self.pq_nodes)
         self.visited = np.zeros((self.graph_sparse.shape[0],), dtype=bool)
-        # [False] * self.graph_sparse.shape[0]
         # for id, dist in enumerate(self.distances):
         #     # inserting a tuple will sort the PriorityQueue
         #     # based on first element of each tuple
@@ -63,17 +65,47 @@ class Graph:
                 node = id
         return node
 
-    def calculate_distances(self, source):
+    def calculate_distances_naive(self, source):
         source = source - 1
         self.init_node_distance(source)
         count = 0
-        with tqdm(total=len(self.visited)) as pbar:
-            while not self.visited.all():
-                node_id = self.min_distance_node()  # self.pq_nodes.get()
-                if node_id == -1:
+        # with tqdm(total=len(self.visited)) as pbar:
+        while not self.visited.all():
+            node_id = self.min_distance_node()
+            if node_id == -1:
+                self.logger.append_log(
+                    'No connecte node found: unvisited count' + str(np.sum(self.visited == False)))
+                break
+            self.visited[node_id] = True
+            self.logger.append_log(
+                'current node:' + str(node_id) + 'dist=' + str(self.distances[node_id]))
+            # returns indices on column axis for node_id row
+            neighbour_nodes = self.graph_sparse[node_id].nonzero()[1]
+            self.logger.append_log('neighbor nodes:' +
+                                str(list(neighbour_nodes)))
+            for neighbour in neighbour_nodes:
+                if not self.visited[neighbour] and \
+                        self.graph_sparse[node_id, neighbour] + self.distances[node_id] < self.distances[neighbour]:
+                    self.distances[neighbour] = self.graph_sparse[node_id,
+                                                                neighbour] + self.distances[node_id]
+
                     self.logger.append_log(
-                        'No connecte node found: unvisited count' + str(np.sum(self.visited == False)))
-                    break
+                        'distance updated for node-{}'.format(str(neighbour)))
+            # pbar.update(1)
+            count = count + 1
+            self.logger.append_log(
+                'visited nodes:' + str(np.sum(self.visited)))
+        self.distance_map[source + 1] = self.distances
+        # print('Shortest path from node-{} to all nodes is {}'.format(source, self.distances))
+        self.logger.flush()
+
+    def calculate_distances_heap(self, source):
+        source = source - 1
+        self.init_node_distance(source)
+        count = 0
+        with tqdm(total=len(self.pq_nodes)) as pbar:
+            while len(self.pq_nodes):
+                distance, node_id = heapq.heappop(self.pq_nodes)  # self.min_distance_node()
                 self.visited[node_id] = True
                 self.logger.append_log(
                     'current node:' + str(node_id) + 'dist=' + str(self.distances[node_id]))
@@ -86,14 +118,32 @@ class Graph:
                             self.graph_sparse[node_id, neighbour] + self.distances[node_id] < self.distances[neighbour]:
                         self.distances[neighbour] = self.graph_sparse[node_id,
                                                                     neighbour] + self.distances[node_id]
+
                         self.logger.append_log(
                             'distance updated for node-{}'.format(str(neighbour)))
+                while len(self.pq_nodes):
+                    heapq.heappop(self.pq_nodes)
+                
+                self.pq_nodes = [(dist, id) for id, dist in enumerate(self.distances) if not self.visited[id]]
+                heapq.heapify(self.pq_nodes)
                 pbar.update(1)
                 count = count + 1
                 self.logger.append_log(
                     'visited nodes:' + str(np.sum(self.visited)))
             self.distance_map[source + 1] = self.distances
             # print('Shortest path from node-{} to all nodes is {}'.format(source, self.distances))
-            pickle.dump(self.distance_map, open(
-                '../outputs/distance_map_' + str(time.time()) + '.pickle', 'wb'))
+            save_path = '../outputs/distance_map_' + str(time.time()) + '.pickle'
+            print('save path:', save_path)
+            pickle.dump(self.distance_map, open(save_path, 'wb'))
             self.logger.flush()
+
+    def process_landmarks(self, num_landmarks=150):
+        landmarks = np.random.choice(np.arange(0, self.graph_sparse.shape[0]), num_landmarks)
+        print('number of landmarks:', num_landmarks)
+        for landmark in tqdm(landmarks):
+            self.calculate_distances_naive(landmark)
+        
+        save_path = '../outputs/distance_map_' + str(time.time()) + '.pickle'
+        print('save path:', save_path)
+        pickle.dump(self.distance_map, open(save_path, 'wb'))
+        return save_path
