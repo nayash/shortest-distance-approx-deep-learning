@@ -21,7 +21,7 @@ import os
 import pandas as pd
 from matplotlib import pyplot as plt
 import winsound
-import time̥
+import time
 
 
 def seconds_to_minutes(seconds):
