@@ -10,11 +10,12 @@
 
 
 from queue import PriorityQueue
+import scipy
 from scipy import io
 import numpy as np
 import os
 from tqdm.auto import tqdm
-from logger import Logger
+from src.logger import Logger
 import pickle
 import time
 import datetime
@@ -38,9 +39,18 @@ class Node:
 
 
 class Graph:
-    def __init__(self, mtx_file_path, logger: Logger):
-        self.graph_sparse = io.mmread(
-            mtx_file_path).tocsr()  # scipy sparse csr matrix
+    def __init__(self, mtx_file_path, logger: Logger, nx_graph):
+        if mtx_file_path:
+            self.graph_sparse = io.mmread(
+                mtx_file_path).tocsr()  # scipy sparse csr matrix
+        else:
+            self.graph_sparse = scipy.sparse.csr_matrix((nx_graph.number_of_nodes(), 
+                                                  nx_graph.number_of_nodes()), dtype=np.int8)
+            for adj_tup in nx_graph.adjacency():
+                source = adj_tup[0]
+                neighbours = list(adj_tup[1].keys())
+                for neighbour in neighbours:
+                    self.graph_sparse[source, neighbour] = 1
         self.distance_map = {}
         self.logger = logger
 
