@@ -85,3 +85,9 @@ def sound_alert(repeat_count=5):
 def console_pretty_print_df(df):
     with pd.option_context('display.max_rows', None, 'display.max_columns', None):  # more options can be specified also
         print(df)
+
+
+def unison_shuffle_copies(a, b):
+    assert len(a) == len(b)
+    p = np.random.permutation(len(a))
+    return a[p], b[p]
