@@ -63,7 +63,7 @@ def cleanup_file_path(path):
     return path.replace('\\', '/').replace(" ", "_").replace(':', '_')
 
 
-def plot(y, title, output_path, x=None):
+def plot(y, title, output_path=None, x=None):
     fig = plt.figure(figsize=(10, 10))
     # x = x if x is not None else np.arange(len(y))
     plt.title(title)
@@ -71,7 +71,10 @@ def plot(y, title, output_path, x=None):
         plt.plot(x, y, 'o-')
     else:
         plt.plot(y, 'o-')
+    if output_path:
         plt.savefig(output_path)
+    else:
+        plt.show()
 
 
 def sound_alert(repeat_count=5):
