@@ -1,5 +1,8 @@
 
-/outputs
+/outputs/*
+!/outputs/logs
+/outputs/logs/*
+!/outputs/logs/runs
 /.idea
 src/__pycache__/
 src/secrets.py
