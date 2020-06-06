@@ -39,6 +39,9 @@ class Node:
 
 
 class Graph:
+    """
+    This class is not used since it has some bugs. Networkx is used instead.
+    """
     def __init__(self, mtx_file_path, logger: Logger, nx_graph):
         if mtx_file_path:
             self.graph_sparse = io.mmread(
