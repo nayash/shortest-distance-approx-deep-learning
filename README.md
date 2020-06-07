@@ -6,7 +6,7 @@ Using traditional methods(Dijkstra's Algo etc) for solving graph problems like s
 
 #### Proposed Solution
 1. Get your graph data.
-2. Use algorithm suggested in <b>Node2Vec</b> paper to find feature vector embeddings for your graph.
+2. Use algorithm suggested in <b>Node2Vec</b> paper to find feature vector embeddings for your graph. I have used the implementation of Node2Vec algo provided by original authors of the paper.
 3. Prepare your training/test dataset:
       a. Use Node2Vec to find feature embeddings for each of your graph nodes.
       b. Select a small number of landmark nodes (l) from all the nodes (n) of the graph, where l << n.
@@ -21,7 +21,7 @@ Baseline: Accuracy=50.57%, MSE=0.56, MAE=0.59
 Best MLP (till now): Accuracy=76%, MSE=0.18, MAE=0.34
 
 #### Files in the project
-Main project files are <b>data_prep.ipynb</b> and <b>train.ipynb</b>. I have also included a "fun.ipynb" file which has some interesting observations from the project. This time I have also included all the experiments and results captured in tensorboard.
+Main project files are <b>data_prep.ipynb</b> and <b>train.ipynb</b>. I have also included a "fun.ipynb" file which has some interesting observations from the project. Node2Vec implementation provided by authors was in python2, so I have converted and included the necessary files in python3 format. This time I have also included all the experiments and results that I captured in the tensorboard.
 
 Graph data is downloaded with gratitude from:
 
