@@ -33,7 +33,7 @@ class Graph():
 					walk.append(next)
 			else:
 				break
-
+		print(f'source={start_node}, walk={walk}')
 		return walk
 
 	def simulate_walks(self, num_walks, walk_length):
