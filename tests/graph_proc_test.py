@@ -19,27 +19,6 @@ import networkx as nx
 class GraphTest(unittest.TestCase):
 
     def setUp(self) -> None:     
-        # './tests/graph1.mtx'
-        # generate a test graph to test Graph class
-        # self.test_graph = nx.erdos_renyi_graph(100, 0.3, seed=999)
-        # save the graph as edgelist
-        # self.mtx_path = './erg_test.graph'
-        # nx.write_edgelist(self.test_graph, self.mtx_path)
-        
-        # convert edgelist to mtx format expected by Graph class
-        # lines = []
-        # with open(self.mtx_path, 'r') as file:
-        #     lines = file.readlines()
-
-        # new_lines = []
-        # with open(self.mtx_path, 'w') as file:
-        #     new_lines.append('%%MatrixMarket matrix coordinate pattern symmetric\n')
-        #     new_lines.append('{} {} {}\n'.format(self.test_graph.number_of_nodes(), 
-        #                     self.test_graph.number_of_nodes(), self.test_graph.number_of_edges()))
-        #     lines = [line.replace('{}', '') for line in lines]
-        #     new_lines.extend(lines)
-        #     new_lines[-1] = new_lines[-1].replace('\n', '')
-        #     file.writelines(new_lines)
         logger = Logger('../outputs/logs', 'test_log')
         self.test_graph = nx.read_edgelist('./tests/graph1.edgelist')
         self.graph_proc = graph_proc.Graph(None, logger, self.test_graph)
