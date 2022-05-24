@@ -1,5 +1,5 @@
 # shortest-distance-approx-deep-learning
-Implementation of the paper "Shortest Path Distance Approximation using Deep learning Techniques" (under development)
+Implementation of the paper "Shortest Path Distance Approximation using Deep learning Techniques"
 
 #### Problem Statement
 Using traditional methods(Dijkstra's Algo etc) for solving graph problems like shortest path distance is not scalable for very large graphs we see these days like social media graphs. This paper suggests a method to approximate shortest path distances using Deep Learning.
